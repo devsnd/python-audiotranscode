@@ -11,6 +11,7 @@ class Transcoder(object):
         'ogg' : 'audio/ogg',
         'flac' : 'audio/flac',
         'aac' : 'audio/aac',
+        'wav' : 'audio/wav',
     }
     def __init__(self):
         self.command = ['']
@@ -82,10 +83,13 @@ class AudioTranscode:
     Encoders = [
         #encoders take input from stdin and write output to stout
         Encoder('ogg', ['oggenc', '-b','BITRATE','-']),
+        #Encoder('ogg', ['ffmpeg', '-i', '-', '-f', 'ogg', '-acodec', 'vorbis', '-']), #doesn't work yet
         Encoder('mp3', ['lame','-b','BITRATE','-','-']),
-        #Encoder('ogg', ['ffmpeg', '-i', '-', '-f', 'ogg', '-acodec', 'libvorbis', '-ab', 'BITRATE', '-']),
         Encoder('mp3', ['ffmpeg', '-i', '-', '-f', 'mp3', '-acodec', 'libmp3lame', '-ab', 'BITRATE', '-']),
-        Encoder('aac', ['faac','-b','BITRATE','-P','-o','-','-']),
+        Encoder('aac', ['faac','-b','BITRATE','-P','-X','-o','-','-']),
+        Encoder('flac', ['flac', '--force-raw-format', '--endian=little', '--channels=2', '--bps=16', '--sample-rate=44100', '--sign=signed', '-o', '-', '-']),
+        Encoder('wav', ['cat']),
+        
     ]
     Decoders = [
         #filepath must be appendable!
@@ -95,7 +99,7 @@ class AudioTranscode:
         Decoder('ogg'  , ['ffmpeg', '-i', 'INPUT', '-f', 'wav', '-acodec', 'pcm_s16le', '-']),
         Decoder('flac' , ['flac', '-F','-d', '-c', 'INPUT']),
         Decoder('aac'  , ['faad', '-w', 'INPUT']), 
-        #Decoder('mp3'  , ['mplayer','-vc','null','-vo','null','-ao' 'pcm:waveheader:fast:file=-']),
+        Decoder('wav'  , ['cat', 'INPUT']), 
     ]
     
     def __init__(self,debug=False):

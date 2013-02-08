@@ -42,21 +42,26 @@ testfiles = {
     'mp3' : os.path.join(testdir,'test.mp3'),
     'ogg' : os.path.join(testdir,'test.ogg'),
     'flac': os.path.join(testdir,'test.flac'),
+    'wav': os.path.join(testdir,'test.wav'),
 }
+outputpath = os.path.join(testdir,'output')
+if not os.path.exists(outputpath):
+    os.mkdir(outputpath)
 
 def generictestfunc(filepath, newformat, encoder, decoder):
-    ident = "%s %s --> %s %s" % (
+    ident = "%s_%s_to_%s_%s" % (
             decoder.command[0],
             os.path.basename(filepath),
             encoder.command[0],
             newformat
         )
-    print(ident)
+    #print(ident)
     outdata = b''
     for data in transcoder.transcodeStream(filepath, newformat, encoder=encoder, decoder=decoder):
         outdata += data
     ok_(len(outdata)>0, 'No data received: '+ident)
-    print('retrieved %d kB'%(len(outdata)/1000))
+    with open(os.path.join(outputpath,ident+'.'+newformat),'wb') as outfile:
+        outfile.write(outdata)
 
 
 def test_generator():
