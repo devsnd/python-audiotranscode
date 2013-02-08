@@ -18,7 +18,7 @@ class Transcoder(object):
         
     def available(self):
         try:
-            subprocess.Popen([self.command[0]],stdout=devnull, stderr=devnull)
+            subprocess.Popen([self.command[0]],stdout=Transcoder.devnull, stderr=Transcoder.devnull)
             return True
         except OSError:
             return False
@@ -105,8 +105,8 @@ class AudioTranscode:
     
     def __init__(self,debug=False):
         self.debug = debug
-        self.availableEncoders = list(filter(lambda x:x.available,AudioTranscode.Encoders))
-        self.availableDecoders = list(filter(lambda x:x.available,AudioTranscode.Decoders))
+        self.availableEncoders = list(filter(lambda x:x.available(),AudioTranscode.Encoders))
+        self.availableDecoders = list(filter(lambda x:x.available(),AudioTranscode.Decoders))
         self.bitrate = {'mp3':160, 'ogg': 128, 'aac': 128}
     
     def availableEncoderFormats(self):
