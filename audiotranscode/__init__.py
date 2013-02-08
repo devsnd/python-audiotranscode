@@ -80,6 +80,7 @@ class DecodeError(TranscodeError):
         return repr(self.value)
 
 class AudioTranscode:
+    READ_BUFFER = 1024
     Encoders = [
         #encoders take input from stdin and write output to stout
         Encoder('ogg', ['oggenc', '-b','BITRATE','-']),
@@ -109,10 +110,10 @@ class AudioTranscode:
         self.bitrate = {'mp3':160, 'ogg': 128, 'aac': 128}
     
     def availableEncoderFormats(self):
-        return set(map(lambda x:x.filetype, self.availableEncoders))
+        return list(set(map(lambda x:x.filetype, self.availableEncoders)))
         
     def availableDecoderFormats(self):
-        return set(map(lambda x:x.filetype, self.availableDecoders))
+        return list(set(map(lambda x:x.filetype, self.availableDecoders)))
     
     def _filetype(filepath):
         if '.' in filepath:
@@ -165,7 +166,7 @@ class AudioTranscode:
             decoder_process = self._decode(filepath, decoder)
             encoder_process = self._encode(newformat, decoder_process,bitrate=bitrate,encoder=encoder)
             while encoder_process.poll() == None:
-                data = encoder_process.stdout.read()
+                data = encoder_process.stdout.read(AudioTranscode.READ_BUFFER)
                 if data == None:
                     time.sleep(0.1) #wait for new data...
                     break               
@@ -190,3 +191,9 @@ class AudioTranscode:
                 if encoder_process.stderr:
                     encoder_process.stderr.close()
                 encoder_process.wait()
+    
+    def mimeType(self, fileExtension):
+        return AudioTranscode.mimeType(fileExtension)
+    
+    def mimeType(fileExtension):
+        return Transcoder.MimeTypes.get(fileExtension)
