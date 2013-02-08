@@ -66,8 +66,12 @@ def generictestfunc(filepath, newformat, encoder, decoder):
 
 def test_generator():
     for enc in transcoder.Encoders:
-        ok_(enc.filetype in transcoder.availableEncoderFormats(), 'Encoder %s not installed!'%enc.command[0])
+        if not enc.filetype in transcoder.availableEncoderFormats():
+            print('Encoder %s not installed!'%enc.command[0])
+            continue
         for dec in transcoder.Decoders:
-            ok_(dec.filetype in transcoder.availableDecoderFormats(), 'Encoder %s not installed!'%dec.command[0])
+            if not dec.filetype in transcoder.availableDecoderFormats():
+                print('Encoder %s not installed!'%dec.command[0])
+                continue
             if dec.filetype in testfiles:
                 yield generictestfunc, testfiles[dec.filetype], enc.filetype, enc, dec
