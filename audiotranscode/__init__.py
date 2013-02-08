@@ -115,7 +115,7 @@ class AudioTranscode:
     def availableDecoderFormats(self):
         return list(set(map(lambda x:x.filetype, self.availableDecoders)))
     
-    def _filetype(filepath):
+    def _filetype(self, filepath):
         if '.' in filepath:
             return filepath.lower()[filepath.rindex('.')+1:]
     
@@ -123,7 +123,7 @@ class AudioTranscode:
         if not os.path.exists(filepath):
             filepath = os.path.abspath(filepath)
             raise DecodeError('File not Found! Cannot decode "file" %s'%filepath)
-        filetype = AudioTranscode._filetype(filepath)
+        filetype = self._filetype(filepath)
         if not filetype in self.availableDecoderFormats():
             raise DecodeError('No decoder available to handle filetype %s'%filetype)
         elif not decoder:
@@ -153,7 +153,7 @@ class AudioTranscode:
 
     def transcode(self, in_file, out_file, bitrate=None):
         print(out_file)
-        audioformat = AudioTranscode._filetype(out_file)
+        audioformat = self._filetype(out_file)
         with open(out_file, 'wb') as fh:
             for data in self.transcodeStream(in_file,audioformat,bitrate):
                 fh.write(data)
