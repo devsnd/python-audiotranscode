@@ -11,7 +11,7 @@ As of now audiotranscode can transcode between any of the following formats:
 _filetype_ _(program used)_
 
  - mp3 (lame, ffmpeg)
- - ogg (vorbis, ffmpeg)
+ - ogg (vorbis oggenc/oggdec, ffmpeg)
  - aac/m4a (faac, faad)
  - flac (flac)
  - wav
