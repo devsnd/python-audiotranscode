@@ -35,6 +35,12 @@ You can also get the encoded data on the fly for live transcoding:
         # do something with chuck of data
         # e.g. sendDataToClient(data)
         
+If you need to know which formats can be transcoded:
+
+    at = audiotranscode = AudioTranscode()
+    at.availableEncoderFormats() #returns list like ['mp3','ogg', ...]
+    at.availableDecoderFormats() #returns list like ['mp3','ogg', ...]
+        
 limitations
 -----------
 
