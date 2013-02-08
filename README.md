@@ -25,7 +25,8 @@ Using audiotranscode is as easy as py:
     at = audiotranscode.AudioTranscode()
     at.transcode('path/to/some.mp3','output/path.ogg')
     
-    #you can also set the bitrate of the output stream, like so:
+you can also set the bitrate of the output stream, like so:
+
     at.transcode('path/to/some.aac','output/path.mp3',bitrate=128)
     
 You can also get the encoded data on the fly for live transcoding:
