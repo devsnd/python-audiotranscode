@@ -31,15 +31,15 @@ you can also set the bitrate of the output stream, like so:
     
 You can also get the encoded data on the fly for live transcoding:
 
-    for data in at.transcodeStream('path/to/some.flac','mp3'):
+    for data in at.transcode_stream('path/to/some.flac','mp3'):
         # do something with chuck of data
         # e.g. sendDataToClient(data)
         
 If you need to know which formats can be transcoded:
 
     at = audiotranscode = AudioTranscode()
-    at.availableEncoderFormats() #returns list like ['mp3','ogg', ...]
-    at.availableDecoderFormats() #returns list like ['mp3','ogg', ...]
+    at.available_encoder_formats() #returns list like ['mp3','ogg', ...]
+    at.available_decoder_formats() #returns list like ['mp3','ogg', ...]
         
 limitations
 -----------
