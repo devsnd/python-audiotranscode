@@ -43,6 +43,7 @@ testfiles = {
     'ogg' : os.path.join(testdir,'test.ogg'),
     'flac': os.path.join(testdir,'test.flac'),
     'wav': os.path.join(testdir,'test.wav'),
+    'm4a': os.path.join(testdir,'test.m4a'),
 }
 outputpath = os.path.join(testdir,'output')
 if not os.path.exists(outputpath):
