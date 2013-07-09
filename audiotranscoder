@@ -24,6 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 import audiotranscode
 import sys
+import os
+
+EXE = os.path.basename(__file__)
 
 USAGE_TEXT = """audiotranscode version %s
 
@@ -32,7 +35,7 @@ usage:
     %s [-b BITRATE] <input> <output>
     %s -h | --help
     %s --codecs
-""" % (audiotranscode.__version__, __file__, __file__, __file__)
+""" % (audiotranscode.__version__, EXE, EXE, EXE)
 
 HELP_TEXT = """
     %s [-b BITRATE] <input> <output>
@@ -50,7 +53,7 @@ shows this help text
 
 shows all installed codecs
 
-""" % (__file__, __file__, __file__)
+""" % (EXE, EXE, EXE)
 
 
 def usage():
@@ -76,6 +79,9 @@ def list_codecs():
     for dec in transcode.Decoders:
         avail = 'yes' if dec.available() else 'no'
         print(row_format.format(dec.command[0], avail, dec.filetype))
+
+if len(sys.argv) == 1:
+    usage()
 
 if '-h' in sys.argv or '--help' in sys.argv:
     print(HELP_TEXT)
