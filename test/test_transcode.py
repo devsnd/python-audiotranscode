@@ -58,7 +58,7 @@ def generictestfunc(filepath, newformat, encoder, decoder):
         )
     #print(ident)
     outdata = b''
-    for data in transcoder.transcodeStream(filepath, newformat, encoder=encoder, decoder=decoder):
+    for data in transcoder.transcode_stream(filepath, newformat, encoder=encoder, decoder=decoder):
         outdata += data
     ok_(len(outdata)>0, 'No data received: '+ident)
     with open(os.path.join(outputpath,ident+'.'+newformat),'wb') as outfile:
@@ -67,11 +67,11 @@ def generictestfunc(filepath, newformat, encoder, decoder):
 
 def test_generator():
     for enc in transcoder.Encoders:
-        if not enc.filetype in transcoder.availableEncoderFormats():
+        if not enc.filetype in transcoder.available_encoder_formats():
             print('Encoder %s not installed!'%enc.command[0])
             continue
         for dec in transcoder.Decoders:
-            if not dec.filetype in transcoder.availableDecoderFormats():
+            if not dec.filetype in transcoder.available_decoder_formats():
                 print('Encoder %s not installed!'%dec.command[0])
                 continue
             if dec.filetype in testfiles:
