@@ -1,0 +1,112 @@
+#!/usr/bin/python3
+"""
+audiotranscode
+Copyright (c) 2013 Tom Wallroth
+
+Sources on github:
+  http://github.com/devsnd/audiotranscode/
+
+licensed under GNU GPL version 3 (or later)
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>
+"""
+
+import audiotranscode
+import sys
+
+USAGE_TEXT = """audiotranscode version %s
+
+usage:
+
+    %s [-b BITRATE] <input> <output>
+    %s -h | --help
+    %s --codecs
+""" % (audiotranscode.__version__, __file__, __file__, __file__)
+
+HELP_TEXT = """
+    %s [-b BITRATE] <input> <output>
+
+bitrate is specified in kbits/s
+<input> is the path to the file that needs to be transcoded
+<output> is the output path. The file extension of the output determines
+the new file format
+
+    %s -h | --help
+
+shows this help text
+
+    %s --codecs
+
+shows all installed codecs
+
+""" % (__file__, __file__, __file__)
+
+
+def usage():
+    """print usage string"""
+
+    print(USAGE_TEXT)
+    sys.exit(1)
+
+
+def list_codecs():
+    """list all available encoders and decoders on the command line"""
+
+    transcode = audiotranscode.AudioTranscode()
+    row_format = "{:>10}" * 3
+    print('Encoders:')
+    print(row_format.format('ENCODER', 'INSTALLED', 'FILETYPE'))
+    for enc in transcode.Encoders:
+        avail = 'yes' if enc.available() else 'no'
+        print(row_format.format(enc.command[0], avail, enc.filetype))
+
+    print('Decoders:')
+    print(row_format.format('ENCODER', 'INSTALLED', 'FILETYPE'))
+    for dec in transcode.Decoders:
+        avail = 'yes' if dec.available() else 'no'
+        print(row_format.format(dec.command[0], avail, dec.filetype))
+
+if '-h' in sys.argv or '--help' in sys.argv:
+    print(HELP_TEXT)
+    sys.exit(0)
+
+if '--codecs' in sys.argv:
+    list_codecs()
+    sys.exit(0)
+
+BITRATE = None
+if '-b' in sys.argv:
+    if not len(sys.argv) == 5:
+        print('wrong number of arguments')
+        usage()
+    try:
+        BITRATE = int(sys.argv[sys.argv.index['-b']+1])
+    except ValueError:
+        print('bitrate must be a number')
+        usage()
+else:
+    if not len(sys.argv) == 3:
+        print('wrong number of arguments')
+        usage()
+IN_FILE = sys.argv[-2]
+OUT_FILE = sys.argv[-1]
+
+TRANSCODER = audiotranscode.AudioTranscode()
+try:
+    TRANSCODER.transcode(IN_FILE, OUT_FILE, BITRATE)
+except audiotranscode.TranscodeError as exc:
+    print(exc)
+    print('try the --codecs switch to see all installed codecs')
+except IOError as exc:
+    print(exc)

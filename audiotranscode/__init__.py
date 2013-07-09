@@ -1,16 +1,41 @@
 #!/usr/bin/python3
+#
+# audiotranscode
+# Copyright (c) 2013 Tom Wallroth
+#
+# Sources on github:
+#   http://github.com/devsnd/audiotranscode/
+#
+# licensed under GNU GPL version 3 (or later)
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>
+#
+
+__version__ = '0.1'
+
 import subprocess
 import re
 import os
 import time
 
 MimeTypes = {
-    'mp3' : 'audio/mpeg',
-    'ogg' : 'audio/ogg',
-    'flac' : 'audio/flac',
-    'aac' : 'audio/aac',
-    'm4a' : 'audio/m4a',
-    'wav' : 'audio/wav',
+    'mp3': 'audio/mpeg',
+    'ogg': 'audio/ogg',
+    'flac': 'audio/flac',
+    'aac': 'audio/aac',
+    'm4a': 'audio/m4a',
+    'wav': 'audio/wav',
 }
 
 class Transcoder(object):
@@ -21,7 +46,7 @@ class Transcoder(object):
         
     def available(self):
         try:
-            subprocess.Popen([self.command[0]],stdout=Transcoder.devnull, stderr=Transcoder.devnull)
+            subprocess.Popen([self.command[0]],stdin=Transcoder.devnull, stdout=Transcoder.devnull, stderr=Transcoder.devnull)
             return True
         except OSError:
             return False
@@ -97,7 +122,7 @@ class AudioTranscode:
         
     ]
     Decoders = [
-        #filepath must be appendable!
+        #INPUT is replaced with filepath
         Decoder('mp3'  , ['mpg123', '-w', '-', 'INPUT']),
         Decoder('mp3'  , ['ffmpeg', '-i', 'INPUT', '-f', 'wav', '-acodec', 'pcm_s16le', '-']),
         Decoder('ogg'  , ['oggdec', '-Q','-b', '16', '-o', '-', 'INPUT']),
@@ -127,7 +152,7 @@ class AudioTranscode:
     def _decode(self, filepath, decoder=None):
         if not os.path.exists(filepath):
             filepath = os.path.abspath(filepath)
-            raise DecodeError('File not Found! Cannot decode "file" %s'%filepath)
+            raise IOError('File not Found! Cannot decode "file" %s'%filepath)
         filetype = self._filetype(filepath)
         if not filetype in self.availableDecoderFormats():
             raise DecodeError('No decoder available to handle filetype %s'%filetype)
@@ -141,8 +166,6 @@ class AudioTranscode:
         return decoder.decode(filepath)
         
     def _encode(self, audio_format, decoder_process, bitrate=None,encoder=None):
-        if not audio_format in self.availableEncoderFormats():
-            raise EncodeError('No encoder available to handle audio format %s'%audio_format)
         if not bitrate:
             bitrate = self.bitrate.get(audio_format)
         if not bitrate:
@@ -156,15 +179,20 @@ class AudioTranscode:
                 print(encoder)
         return encoder.encode(decoder_process, bitrate)
 
+    def checkEncoderAvailable(self, audio_format):
+        if not audio_format in self.availableEncoderFormats():
+            raise EncodeError('No encoder available to handle audio format %s'%audio_format)
+
     def transcode(self, in_file, out_file, bitrate=None):
-        print(out_file)
         audioformat = self._filetype(out_file)
+        self.checkEncoderAvailable(audioformat)
         with open(out_file, 'wb') as fh:
             for data in self.transcodeStream(in_file,audioformat,bitrate):
                 fh.write(data)
             fh.close()
 
-    def transcodeStream(self, filepath, newformat,bitrate=None,encoder=None,decoder=None):
+    def transcodeStream(self, filepath, newformat, bitrate=None,encoder=None,decoder=None):
+        self.checkEncoderAvailable(newformat)
         decoder_process = None
         encoder_process = None
         try:
