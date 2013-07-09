@@ -21,11 +21,9 @@ command line usage
 
     audiotranscoder [-b BITRATE] <infile> <outfile>
 
-bitrate is specified in kbits/s
-
-<input> is the path to the file that needs to be transcoded
-
-<output> is the output path. The file extension of the output determines the output format
+```bitrate``` is specified in kbits/s.
+```<input>``` is the path to the file that needs to be transcoded.
+```<output>``` is the output path. The file extension of the output determines the output format
 
     audiotranscoder --codecs
 
