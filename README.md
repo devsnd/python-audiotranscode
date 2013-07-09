@@ -1,7 +1,7 @@
 audiotranscode
 ==============
 
-python module to transcode between audio formats using the CLI frontends of the codecs already installed on your system
+python module to transcode between audio formats using the CLI frontends of the codecs already installed on your system, e.g lame, vorbis-tools etc
 
 supported formats
 -----------------
@@ -16,8 +16,22 @@ _filetype_ _(program used)_
  - flac (flac)
  - wav
 
-usage
------
+command line usage
+------------------
+
+    audiotranscoder [-b BITRATE] <infile> <outfile>
+
+bitrate is specified in kbits/s
+<input> is the path to the file that needs to be transcoded
+<output> is the output path. The file extension of the output determines
+
+    audiotranscoder --codecs
+
+shows all installed codecs
+
+
+programatical usage
+-------------------
 
 Using audiotranscode is as easy as py:
 
