@@ -14,7 +14,7 @@ python:
 
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install -y lame vorbis-tools faac faad flac
+  - sudo apt-get install -y lame vorbis-tools faac faad flac mpg123
 
 # command to install dependencies
 install:
