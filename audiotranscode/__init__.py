@@ -28,6 +28,7 @@ import subprocess
 import re
 import os
 import time
+from distutils.spawn import find_executable
 
 MIMETYPES = {
     'mp3': 'audio/mpeg',
@@ -49,14 +50,7 @@ class Transcoder(object):
     def available(self):
         """checks if the command defined in the encoder or decoder is
         available by calling it once"""
-        try:
-            subprocess.Popen([self.command[0]],
-                             stdin=Transcoder.devnull,
-                             stdout=Transcoder.devnull,
-                             stderr=Transcoder.devnull)
-            return True
-        except OSError:
-            return False
+        return bool(find_executable(self.command[0]))
 
 
 class Encoder(Transcoder):
@@ -70,7 +64,8 @@ class Encoder(Transcoder):
     def encode(self, decoder_process, bitrate):
         """encodes the raw audio stream coming from the decoder_process
         using the spedcified command"""
-        cmd = self.command[:]
+        # get the absolute path under which the executable is found
+        cmd = [find_executable(self.command[0])] + self.command[1:]
         if 'BITRATE' in cmd:
             cmd[cmd.index('BITRATE')] = str(bitrate)
         return subprocess.Popen(cmd,
@@ -94,7 +89,8 @@ class Decoder(Transcoder):
 
     def decode(self, filepath):
         """returns the process the decodes the file to a raw audio stream"""
-        cmd = self.command[:]
+        # get the absolute path under which the executable is found
+        cmd = [find_executable(self.command[0])] + self.command[1:]
         if 'INPUT' in cmd:
             cmd[cmd.index('INPUT')] = filepath
         return subprocess.Popen(cmd,
