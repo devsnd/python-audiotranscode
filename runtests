@@ -34,7 +34,7 @@ if [ ! -d ${PROJECTDIR} ]; then
 fi
 
 echo "running unit tests..."
-nosetests-3.3 --nocapture
+nosetests3 --nocapture
 if [ $? != 0 ]; then
     echo "unit test(s) failed" >&2
     exit 1
