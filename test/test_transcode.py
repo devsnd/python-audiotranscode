@@ -56,7 +56,6 @@ def generictestfunc(filepath, newformat, encoder, decoder):
             encoder.command[0],
             newformat
         )
-    #print(ident)
     outdata = b''
     for data in transcoder.transcode_stream(filepath, newformat, encoder=encoder, decoder=decoder):
         outdata += data
@@ -67,11 +66,11 @@ def generictestfunc(filepath, newformat, encoder, decoder):
 
 def test_generator():
     for enc in transcoder.Encoders:
-        if not enc.filetype in transcoder.available_encoder_formats():
+        if not enc.available():
             print('Encoder %s not installed!'%enc.command[0])
             continue
         for dec in transcoder.Decoders:
-            if not dec.filetype in transcoder.available_decoder_formats():
+            if not dec.available():
                 print('Encoder %s not installed!'%dec.command[0])
                 continue
             if dec.filetype in testfiles:
