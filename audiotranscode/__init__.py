@@ -78,6 +78,9 @@ class Encoder(Transcoder):
         return "<Encoder type='%s' cmd='%s'>" % (self.filetype,
                                                  str(' '.join(self.command)))
 
+    def __repr__(self):
+        return self.__str__()
+
 
 class Decoder(Transcoder):
     """decoder"""
@@ -101,6 +104,9 @@ class Decoder(Transcoder):
     def __str__(self):
         return "<Decoder type='%s' cmd='%s'>" % (self.filetype,
                                                  str(' '.join(self.command)))
+
+    def __repr__(self):
+        return self.__str__()
 
 
 class TranscodeError(Exception):
