@@ -21,6 +21,10 @@ install:
   - "pip install coveralls"
   - "if [[ $TRAVIS_PYTHON_VERSION = 2.6 ]]; then pip install unittest2 --use-mirrors; fi"
 
+# output installed codecs
+before_script:
+  ./audiotranscoder --codecs
+
 # command to run tests
 script:
   coverage run --source=audiotranscode $(command -v nosetests)
