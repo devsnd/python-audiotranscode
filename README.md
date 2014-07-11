@@ -5,6 +5,14 @@ audiotranscode
 
 python module to transcode between audio formats using the CLI frontends of the codecs already installed on your system, e.g lame, vorbis-tools etc
 
+supported python versions:
+ - 2.6
+ - 2.7
+ - 3.2
+ - 3.3
+ - pypy
+
+
 supported formats
 -----------------
 
