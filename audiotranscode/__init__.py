@@ -162,8 +162,6 @@ class AudioTranscode:
         #Encoder('ogg', ['ffmpeg', '-i', '-', '-f', 'ogg',
         #                '-acodec', 'vorbis', '-']),
         Encoder('mp3', ['lame', '-b', 'BITRATE', '-', '-']),
-        Encoder('mp3', ['ffmpeg', '-i', '-', '-f', 'mp3',
-                        '-acodec', 'libmp3lame', '-ab', 'BITRATE', '-']),
         Encoder('aac', ['faac', '-b', 'BITRATE', '-P', '-X', '-o', '-', '-']),
         Encoder('m4a', ['faac', '-b', 'BITRATE', '-P', '-X', '-o', '-', '-']),
         Encoder('flac', ['flac', '--force-raw-format', '--endian=little',
